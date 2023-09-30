@@ -221,10 +221,32 @@ void Mesh::edgeFlip(int f1 , int f2){
     t2.v3 = nonShared2;
 }
 
-float Mesh::produit_vectoriel(Vertex v1 , Vertex v2 , Vertex v3){
-    double v1v2_x = v2.x - v1.x;
-    double v1v2_y = v2.y - v1.y;
-    double v1v3_x = v3.x - v1.x;
-    double v1v3_y = v3.y - v1.y;
-    return v1v2_x * v1v3_y - v1v2_y * v1v3_x;
+float Mesh::test_orientation(Vertex v1 , Vertex v2 , Vertex v3){
+    float v1v2_x = v2.x - v1.x;
+    float v1v2_y = v2.y - v1.y;
+    float v1v3_x = v3.x - v1.x;
+    float v1v3_y = v3.y - v1.y;
+    float result = v1v2_x * v1v3_y - v1v2_y * v1v3_x;
+        if (result > 0) {
+        return 1;  // Counterclockwise
+    } else if (result < 0) {
+        return -1; // Clockwise
+    } else {
+        return 0;  // Collinéaire
+    }
+}
+
+int Mesh::pointInTriangle( Vertex& A,  Vertex& B,  Vertex& C,  Vertex& P) {
+    double orientation1 = this->test_orientation(A, B, P);
+    double orientation2 = this->test_orientation(A, B, P);
+    double orientation3 = this->test_orientation(A, B, P);
+
+    if (orientation1 == 0.0 || orientation2 == 0.0 || orientation3 == 0.0) {
+        return 0; // On the boundary
+    } else if ((orientation1 > 0 && orientation2 > 0 && orientation3 > 0) ||
+               (orientation1 < 0 && orientation2 < 0 && orientation3 < 0)) {
+        return 1; // Inside the triangle
+    } else {
+        return -1; // Outside the triangle
+    }
 }
