@@ -50,24 +50,27 @@ void Mesh::readOFFFile( const string& filename, std::vector<Vertex>& vertices, s
         
         int numVerticesInFace;
         file >> numVerticesInFace >> face.v1 >> face.v2 >> face.v3;
+        
+        vertices[face.v1].front_index  = i ;
+        vertices[face.v2].front_index  = i ;
+        vertices[face.v3].front_index  = i ;
+
         faces[i]=face ;
 
         std::map<std::pair<int, int>, std::pair<int, int>>::iterator iter = indexing_map.find({face.v1 , face.v2 }) ;
+        
         if (iter != indexing_map.end()) {
             int otherFace = iter->second.first;  
             int otherVertex = iter->second.second; 
             switch (otherVertex ){
                 case 1:
                     faces[otherFace].f1 = i ; 
-                    vertices[faces[otherFace].v1].front_index = i ;
                     break;
                 case 2: 
                     faces[otherFace].f2 = i ; 
-                    vertices[faces[otherFace].v2].front_index = i ;
                     break;
                 case 3 :
                     faces[otherFace].f3 = i ; 
-                    vertices[faces[otherFace].v3].front_index = i ;
                     break;
             }
             faces[i].f3 = otherFace;
@@ -83,15 +86,12 @@ void Mesh::readOFFFile( const string& filename, std::vector<Vertex>& vertices, s
             switch (otherVertex ){
                 case 1:
                     faces[otherFace].f1 = i ; 
-                    vertices[faces[otherFace].v1].front_index = i ;
                     break;
                 case 2: 
                     faces[otherFace].f2 = i ; 
-                    vertices[faces[otherFace].v2].front_index = i ;
                     break;
                 case 3 :
                     faces[otherFace].f3 = i ; 
-                    vertices[faces[otherFace].v3].front_index = i ;
                     break;
             }
             faces[i].f2 = otherFace;
@@ -107,15 +107,12 @@ void Mesh::readOFFFile( const string& filename, std::vector<Vertex>& vertices, s
             switch (otherVertex ){
                 case 1:
                     faces[otherFace].f1 = i ; 
-                    vertices[faces[otherFace].v1].front_index = i ;
                     break;
                 case 2: 
                     faces[otherFace].f2 = i ; 
-                    vertices[faces[otherFace].v2].front_index = i ;
                     break;
                 case 3 :
                     faces[otherFace].f3 = i ; 
-                    vertices[faces[otherFace].v3].front_index = i ;
                     break;
             }
             faces[i].f1 = otherFace;
@@ -123,7 +120,8 @@ void Mesh::readOFFFile( const string& filename, std::vector<Vertex>& vertices, s
             indexing_map[{face.v2 , face.v3 }] = { i , 1};
             indexing_map[{face.v3 , face.v2 }] = { i , 1};
         }
-        std::cout << "Size of the map: " << indexing_map.size() << std::endl;
+
+        
     }
  file.close();
 }
@@ -148,3 +146,36 @@ void Mesh::saveOFFFile(const vector<Vertex>& vertices, const vector<Face>& faces
     outFile.close();
 }
 
+
+// void Mesh::addSommet(int indiceFace , Vertex& new_vetex ){
+
+//     Face& face = this->faces[indiceFace];
+//     new_vetex.front_index = this->faces[indiceFace].f1 ;
+//     this->vertices.push_back(new_vetex);
+
+//     Face face2 ;
+//     Face face3 ;
+    
+//     face2.v1 = this->faces[indiceFace].v1 ;
+//     face2.v2 = this->faces[indiceFace].v2 ;
+//     face2.v3 = this->vertices.size() - 1; 
+
+//     face3.v1 = this->vertices.size() - 1 ;
+//     face3.v2 = this->faces[indiceFace].v2 ;
+//     face3.v3 = this->faces[indiceFace].v3; 
+
+//     face.v2 =  this->vertices.size() - 1;
+
+  
+
+//     face.f1 = this->faces.size()  ;
+//     face.f3 = this->faces.size() + 1 ;
+
+//     face2.f1 = this->faces.size() + 1 ;
+//     face2.f2 = indiceFace;
+//     face.f3 = this->vertices[].v3
+
+
+//     this->faces.push_back(face2);
+//     this->faces.push_back(face3);
+// }
