@@ -39,6 +39,7 @@ public:
     void addSommet(int indiceFace , Vertex& new_vetex );
     void edgeFlip(int f1 , int f2);
     float test_orientation(Vertex v1 , Vertex v2 , Vertex v3) ;
+    int pointInTriangle( Vertex& A,  Vertex& B,  Vertex& C,  Vertex& P);
     std::vector<Vertex> vertices;
     std::vector<Face> faces;
     
