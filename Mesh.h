@@ -36,9 +36,10 @@ public:
     Mesh(const std::vector<Vertex> &vertex_init, const std::vector<Face> &faces_init);
     void saveOFFFile(const vector<Vertex> &vertices, const vector<Face> &faces, const string &filename);
     void readOFFFile(const string &filename, std::vector<Vertex> &vertices, std::vector<Face> &faces);
+    void Mesh::addSommet(int indiceFace , Vertex& new_vetex );
     std::vector<Vertex> vertices;
     std::vector<Face> faces;
-
+    
     // Mr Iterator For Vertices
     class Iterator_on_vertices
     {
