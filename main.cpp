@@ -14,8 +14,11 @@ int main()
     std::vector<Face> faces(5);
     std::vector<Vertex> vertices(5);
     Mesh Pyramid(vertices, faces);
-    Pyramid.readOFFFile("data/cube.off", Pyramid.vertices, Pyramid.faces);
+    Pyramid.readOFFFile("data/Tetrahedron.off", Pyramid.vertices, Pyramid.faces);
     Pyramid.saveOFFFile(Pyramid.vertices, Pyramid.faces, "recon_cube.off");
+    Vertex v ;
+    v.x = 0.2 , v.y = 0.2 , v.z = 0.2 , v.front_index=0 ; 
+    Pyramid.addSommet(0,v) ;
 
     std::cout << "Vertices:" << std::endl;
     for (Mesh::Iterator_on_vertices it = Pyramid.vertices_begin(); it != Pyramid.vertices_past_the_end(); ++it)
@@ -31,6 +34,7 @@ int main()
         std::cout << "vertices: " << face.v1 << ", " << face.v2 << ",  " << face.v3 << ", faces : " << face.f1 << ",    " << face.f2 << ",   " << face.f3 << std::endl;
     }
 
+
     for (Mesh::Iterator_on_vertices its = Pyramid.vertices_begin(); its != Pyramid.vertices_past_the_end(); ++its)
     {
         Mesh::Circulator_on_faces cfbegin = Pyramid.incident_faces(*its);
@@ -44,6 +48,13 @@ int main()
         }
         const Vertex &vertex = *its;
         std ::cout << "valence of the vertex " << cmpt << std ::endl;
+    }
+    Pyramid.edgeFlip(1,2);
+        std::cout << "Faces after flipping:" << std::endl;
+    for (Mesh::Iterator_on_faces it = Pyramid.faces_begin(); it != Pyramid.faces_past_the_end(); ++it)
+    {
+        const Face &face = *it;
+        std::cout << "vertices: " << face.v1 << ", " << face.v2 << ",  " << face.v3 << ", faces : " << face.f1 << ",    " << face.f2 << ",   " << face.f3 << std::endl;
     }
 
     return 0;

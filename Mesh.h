@@ -36,7 +36,9 @@ public:
     Mesh(const std::vector<Vertex> &vertex_init, const std::vector<Face> &faces_init);
     void saveOFFFile(const vector<Vertex> &vertices, const vector<Face> &faces, const string &filename);
     void readOFFFile(const string &filename, std::vector<Vertex> &vertices, std::vector<Face> &faces);
-    void Mesh::addSommet(int indiceFace , Vertex& new_vetex );
+    void addSommet(int indiceFace , Vertex& new_vetex );
+    void edgeFlip(int f1 , int f2);
+    float test_orientation(Vertex v1 , Vertex v2 , Vertex v3) ;
     std::vector<Vertex> vertices;
     std::vector<Face> faces;
     

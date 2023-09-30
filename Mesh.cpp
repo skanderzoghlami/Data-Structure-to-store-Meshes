@@ -147,35 +147,84 @@ void Mesh::saveOFFFile(const vector<Vertex>& vertices, const vector<Face>& faces
 }
 
 
-// void Mesh::addSommet(int indiceFace , Vertex& new_vetex ){
+void Mesh::addSommet(int indiceFace , Vertex& new_vetex ){
 
-//     Face& face = this->faces[indiceFace];
-//     new_vetex.front_index = this->faces[indiceFace].f1 ;
-//     this->vertices.push_back(new_vetex);
+    // Vertices Configuration 
+    new_vetex.front_index = indiceFace ;
+    this->vertices.push_back(new_vetex) ;
+    int new_v_place =vertices.size() - 1;
+    Face& nf0 = this->faces[indiceFace]; 
+    Face nf1;
+    nf1.v1 = nf0.v2  , nf1.v2 = nf0.v3 , nf1.v3 = new_v_place  ;
+    Face nf2;
+    nf2.v1 = nf0.v3  , nf2.v2 = nf0.v1 , nf2.v3 = new_v_place  ;
+    nf0.v3 = new_v_place ;
+    // Faces configuraton
 
-//     Face face2 ;
-//     Face face3 ;
-    
-//     face2.v1 = this->faces[indiceFace].v1 ;
-//     face2.v2 = this->faces[indiceFace].v2 ;
-//     face2.v3 = this->vertices.size() - 1; 
-
-//     face3.v1 = this->vertices.size() - 1 ;
-//     face3.v2 = this->faces[indiceFace].v2 ;
-//     face3.v3 = this->faces[indiceFace].v3; 
-
-//     face.v2 =  this->vertices.size() - 1;
-
-  
-
-//     face.f1 = this->faces.size()  ;
-//     face.f3 = this->faces.size() + 1 ;
-
-//     face2.f1 = this->faces.size() + 1 ;
-//     face2.f2 = indiceFace;
-//     face.f3 = this->vertices[].v3
+    int pos_nf1 =  faces.size() ;
+    int pos_nf2 =  faces.size() + 1;
+    int oldface0 = nf0.f1 , oldface1 = nf0.f2 , oldface2 = nf0.f3 ;
 
 
-//     this->faces.push_back(face2);
-//     this->faces.push_back(face3);
-// }
+    nf0.f1 = pos_nf1 , nf0.f2 = pos_nf2 , nf0.f3 = oldface2 ;
+    nf1.f1 = pos_nf2 , nf1.f2 = indiceFace , nf1.f3 = oldface0 ;
+    nf2.f1 = indiceFace , nf2.f2 = pos_nf1 , nf2.f3 = oldface1 ;
+
+    this->faces.push_back(nf1) ;
+    this->faces.push_back(nf2) ;
+
+}
+void Mesh::edgeFlip(int f1 , int f2){
+
+    Face& t1 = this->faces[f1];
+    Face& t2 = this->faces[f2];
+
+    // Find the shared vertices between the two faces.
+    int sharedV1 = -1, sharedV2 = -1;
+    if (t1.v1 == t2.v1 || t1.v1 == t2.v2 || t1.v1 == t2.v3) {
+        sharedV1 = t1.v1;
+    }
+    if (t1.v2 == t2.v1 || t1.v2 == t2.v2 || t1.v2 == t2.v3) {
+        sharedV1 = t1.v2;
+    }
+    if (t1.v3 == t2.v1 || t1.v3 == t2.v2 || t1.v3 == t2.v3) {
+        sharedV1 = t1.v3;
+    }
+
+    // Find the other shared vertex.
+    if (t2.v1 != sharedV1 && (t2.v1 == t1.v1 || t2.v1 == t1.v2 || t2.v1 == t1.v3)) {
+        sharedV2 = t2.v1;
+    }
+    if (t2.v2 != sharedV1 && (t2.v2 == t1.v1 || t2.v2 == t1.v2 || t2.v2 == t1.v3)) {
+        sharedV2 = t2.v2;
+    }
+    if (t2.v3 != sharedV1 && (t2.v3 == t1.v1 || t2.v3 == t1.v2 || t2.v3 == t1.v3)) {
+        sharedV2 = t2.v3;
+    }
+
+
+    int nonShared1, nonShared2;
+    if (t1.v1 != sharedV1) nonShared1 = t1.v1;
+    if (t1.v2 != sharedV1) nonShared1 = t1.v2;
+    if (t1.v3 != sharedV1) nonShared1 = t1.v3;
+
+    if (t2.v1 != sharedV1) nonShared2 = t2.v1;
+    if (t2.v2 != sharedV1) nonShared2 = t2.v2;
+    if (t2.v3 != sharedV1) nonShared2 = t2.v3;
+
+    t1.v1 = nonShared1;
+    t1.v2 = sharedV1;
+    t1.v3 = nonShared2;
+
+    t2.v1 = sharedV2;
+    t2.v2 = nonShared1;
+    t2.v3 = nonShared2;
+}
+
+float Mesh::produit_vectoriel(Vertex v1 , Vertex v2 , Vertex v3){
+    double v1v2_x = v2.x - v1.x;
+    double v1v2_y = v2.y - v1.y;
+    double v1v3_x = v3.x - v1.x;
+    double v1v3_y = v3.y - v1.y;
+    return v1v2_x * v1v3_y - v1v2_y * v1v3_x;
+}
