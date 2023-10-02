@@ -8,6 +8,7 @@ struct Vertex
 {
     float x, y, z;
     int front_index;
+    bool isFinite = true ;
     bool operator==(const Vertex &other) const
     {
         return x == other.x && y == other.y && z == other.z;
@@ -17,6 +18,7 @@ struct Face
 {
     int v1, v2, v3;
     int f1, f2, f3;
+    bool isFinite = true ;
     bool operator==(const Face &other) const
     {
         return v1 == other.v1 && v2 == other.v2 && v3 == other.v3;
